@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
-import com.godknows.gkcatalog.services.exceptions.EntityNotFoundException;
+import com.godknows.gkcatalog.services.exceptions.ResourceNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class ResourceExceptionHandler {
 	
 	
-	public ResponseEntity<StandardError> entityNotFound (EntityNotFoundException e, HttpServletRequest request){
+	public ResponseEntity<StandardError> entityNotFound (ResourceNotFoundException e, HttpServletRequest request){
 		
 		StandardError err = new StandardError();
 		
