@@ -56,6 +56,8 @@ public class ProductServiceTests {
 		Mockito.doThrow(DataIntegrityViolationException.class).when(repository).deleteById(dependentId);
 		
 		Mockito.when(repository.findAll((Pageable)ArgumentMatchers.any())).thenReturn(page);
+		
+		Mockito.when(repository.save(ArgumentMatchers.any())).thenReturn(product);
 	}
 	
 	
