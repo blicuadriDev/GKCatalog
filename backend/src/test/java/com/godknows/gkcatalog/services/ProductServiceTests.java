@@ -12,10 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.godknows.gkcatalog.dtos.ProductDTO;
 import com.godknows.gkcatalog.entities.Product;
 import com.godknows.gkcatalog.repositories.ProductRepository;
 import com.godknows.gkcatalog.services.exceptions.DatabaseException;
@@ -65,6 +68,8 @@ public class ProductServiceTests {
 	}
 	
 	
+	
+	
 	@Test
 	public void deleteShouldDoNothingWhenIdExists() {
 		Assertions.assertDoesNotThrow(() -> {
@@ -89,6 +94,17 @@ public class ProductServiceTests {
 			service.delete(dependentId);
 		});
 		Mockito.verify(repository, Mockito.times(1)).deleteById(dependentId);
+	}
+	
+	@Test
+	public void findAllPagedShouldReturnPage() {
+		//Arrenge
+		Pageable pageable = PageRequest.of(0, 10);
+		//Action
+		Page<ProductDTO> result = service.findAllPaged(pageable);
+		//Assert
+		Assertions.assertNotNull(result);
+		Mockito.verify(repository).findAll(pageable);
 	}
 
 }
