@@ -1,6 +1,7 @@
 package com.godknows.gkcatalog.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,6 +59,9 @@ public class ProductServiceTests {
 		Mockito.when(repository.findAll((Pageable)ArgumentMatchers.any())).thenReturn(page);
 		
 		Mockito.when(repository.save(ArgumentMatchers.any())).thenReturn(product);
+		
+		Mockito.when(repository.findById(existingId)).thenReturn(Optional.of(product));
+		Mockito.when(repository.findById(unexistingId)).thenReturn(Optional.empty());
 	}
 	
 	
