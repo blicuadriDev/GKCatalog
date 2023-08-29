@@ -46,7 +46,6 @@ public class ProductRepositoryTests {
 	
 	@Test
 	public void deteleShouldDeleteObjectWhenIdExist() {
-		
 		//Arrange (I can remove this since I already set the id using Fixture @BeforeEach)
 		//Long existingId = 1L;
 		
@@ -56,13 +55,11 @@ public class ProductRepositoryTests {
 		//Assert
 		Optional<Product> result = repository.findById(existingId);
 		Assertions.assertFalse(result.isPresent());
-
 	}
 	
 	
 	@Test
 	public void findByIdShouldReurnAnOptionalNotEmptyWhenIdExists() {
-		
 		//Arrange (I can remove this since I already set the id using Fixture @BeforeEach)
 		//Long existingId = 1L;
 		
@@ -71,21 +68,19 @@ public class ProductRepositoryTests {
 		
 		//Assert
 		Assertions.assertTrue(result.isPresent());
-
 	}
+	
 	
 	@Test
 	public void findByIdShouldReurnAnEmptyOptionalWhenIdDoesNotExist() {
-		
 		//Arrange (I can remove this since I already set the id using Fixture @BeforeEach)
-		//Long existingId = 1L;
+		//Long unexistingId = 100L;
 		
 		//Act
 		Optional<Product> result = repository.findById(unexistingId);
 		
 		//Assert
 		Assertions.assertFalse(result.isPresent());
-
 	}
 
 }
