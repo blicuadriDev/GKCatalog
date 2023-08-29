@@ -1,18 +1,26 @@
 package com.godknows.gkcatalog.services;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.godknows.gkcatalog.entities.Product;
 import com.godknows.gkcatalog.repositories.ProductRepository;
 import com.godknows.gkcatalog.services.exceptions.DatabaseException;
 import com.godknows.gkcatalog.services.exceptions.ResourceNotFoundException;
+
+import tests.ProductFactoryTests;
 
 @ExtendWith(SpringExtension.class)
 public class ProductServiceTests {
@@ -27,12 +35,16 @@ public class ProductServiceTests {
 	private long existingId;
 	private long unexistingId;
 	private long dependentId;
+	private PageImpl<Product> page;
+	private Product product;
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		existingId = 1L;
 		unexistingId = 2L;
 		dependentId = 3L;
+		product = ProductFactoryTests.createProduct();
+		page = new PageImpl<>(List.of(product));
 		
 		
 		//Simulating the expected behaviour from mocked ProductRepository for ProdcutService actions (existsId and deletebyId)
@@ -42,6 +54,8 @@ public class ProductServiceTests {
 		
 		Mockito.doNothing().when(repository).deleteById(existingId);
 		Mockito.doThrow(DataIntegrityViolationException.class).when(repository).deleteById(dependentId);
+		
+		Mockito.when(repository.findAll((Pageable)ArgumentMatchers.any())).thenReturn(page);
 	}
 	
 	
