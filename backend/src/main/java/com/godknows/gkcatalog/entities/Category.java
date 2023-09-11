@@ -2,13 +2,16 @@ package com.godknows.gkcatalog.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -29,6 +32,8 @@ public class Category implements Serializable{
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 	private Instant updatedAt;
 	
+	@ManyToMany(mappedBy = "categories")
+	private Set<Product> products = new HashSet<>();
 	
 	
 	public Category() {
@@ -77,7 +82,12 @@ public class Category implements Serializable{
 	}
 	
 	
+	public Set<Product> getProducts() {
+		return products;
+	}
 	
+	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

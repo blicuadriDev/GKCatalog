@@ -65,7 +65,7 @@ public class ProductService {
 			return new ProductDTO(entity);
 		}
 		catch(EntityNotFoundException e) {
-			throw new ResourceNotFoundException("Resource ID " + id + " Not Found");
+			throw new ResourceNotFoundException("Product ID " + id + " Not Found");
 		}
 	}
 
