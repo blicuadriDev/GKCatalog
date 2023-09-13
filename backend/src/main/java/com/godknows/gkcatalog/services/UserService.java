@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.godknows.gkcatalog.dtos.RoleDTO;
 import com.godknows.gkcatalog.dtos.UserDTO;
 import com.godknows.gkcatalog.dtos.UserInsertDTO;
+import com.godknows.gkcatalog.dtos.UserUpdateDTO;
 import com.godknows.gkcatalog.entities.Role;
 import com.godknows.gkcatalog.entities.User;
 import com.godknows.gkcatalog.repositories.RoleRepository;
@@ -63,7 +64,7 @@ public class UserService {
 
 	
 	@Transactional
-	public UserDTO update(Long id, UserDTO dto) {
+	public UserDTO update(Long id, UserUpdateDTO dto) {
 		try {
 			User entity = repository.getReferenceById(id);
 			copyDtoToEntity(dto, entity);
