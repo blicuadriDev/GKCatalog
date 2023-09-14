@@ -1,13 +1,17 @@
 package com.godknows.gkcatalog.services;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +22,7 @@ import com.godknows.gkcatalog.dtos.UserInsertDTO;
 import com.godknows.gkcatalog.dtos.UserUpdateDTO;
 import com.godknows.gkcatalog.entities.Role;
 import com.godknows.gkcatalog.entities.User;
+import com.godknows.gkcatalog.projections.UserDetailsProjection;
 import com.godknows.gkcatalog.repositories.RoleRepository;
 import com.godknows.gkcatalog.repositories.UserRepository;
 import com.godknows.gkcatalog.services.exceptions.DatabaseException;
@@ -26,7 +31,7 @@ import com.godknows.gkcatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService{
 	
 	@Autowired
 	private UserRepository repository;
@@ -35,7 +40,7 @@ public class UserService {
 	private RoleRepository roleRepository;
 	
 	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	
 	
 	@Transactional(readOnly = true)
@@ -101,6 +106,27 @@ public class UserService {
 			Role role = roleRepository.getReferenceById(roleDto.getId());
 			entity.getRoles().add(role);
 		}
+	}
+
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        List<UserDetailsProjection> result = repository.searchUserAndRolesByEmail(username);
+        if(result.size() == 0) {
+             throw new UsernameNotFoundException("User Not found!");
+        }
+        
+        User user = new User();
+        user.setEmail(username);
+        user.setPassword(result.get(0).getPassword());
+        
+        for(UserDetailsProjection projection : result) {
+            user.addRole(new Role(projection.getRoleId(), projection.getAuthority()));
+        }
+        
+        return user;
+
 	}
 	
 }
