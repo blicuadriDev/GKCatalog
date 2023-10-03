@@ -14,8 +14,6 @@ import com.godknows.gkcatalog.dtos.ProductDTO;
 import com.godknows.gkcatalog.repositories.ProductRepository;
 import com.godknows.gkcatalog.services.exceptions.ResourceNotFoundException;
 
-import tests.ProductFactoryTests;
-
 @SpringBootTest
 @Transactional
 public class ProductServiceIT {
