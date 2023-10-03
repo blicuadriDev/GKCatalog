@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.godknows.gkcatalog.dtos.ProductDTO;
-import com.godknows.gkcatalog.projections.ProductProjection;
 import com.godknows.gkcatalog.services.ProductService;
 
 import jakarta.validation.Valid;

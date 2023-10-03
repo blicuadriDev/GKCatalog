@@ -23,6 +23,7 @@ import com.godknows.gkcatalog.repositories.CategoryRepository;
 import com.godknows.gkcatalog.repositories.ProductRepository;
 import com.godknows.gkcatalog.services.exceptions.DatabaseException;
 import com.godknows.gkcatalog.services.exceptions.ResourceNotFoundException;
+import com.godknows.gkcatalog.util.Utils;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -44,17 +45,7 @@ public class ProductService {
 	
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(String name, String categoryId, Pageable pageable) {
-		
-				// converting categoryIds to List<Long> step-by-step for learning purpose:
-				//
-				// 1- String [] vet = categoryId.split(",");
-				// 2- List<String> list = Arrays.asList(vet);
-				// 3- List<Long> categoryIds = list.stream().map(x -> Long.parseLong(x)).toList();
-				//    or: List<Long> categoryIds = list.stream().map(Long::parseLong).toList();
-				//
-				// replaced all 3 lines for just one
-				// List<Long> categoryIds = Arrays.asList(categoryId.split(",")).stream().map(Long::parseLong).toList();
-		
+
 		List<Long> categoryIds = Arrays.asList();
 
 		if(!"0".equals(categoryId)) {
@@ -63,8 +54,11 @@ public class ProductService {
 
 		Page<ProductProjection> page = repository.searchProducts(categoryIds, name, pageable);
 		List<Long> productIds = page.map(x -> x.getId()).toList();
-		List<Product> entity = repository.searchProductWithCategory(productIds);
-		List<ProductDTO> dtos = entity.stream().map(p -> new ProductDTO(p, p.getCategories())).toList();
+		List<Product> entities = repository.searchProductWithCategory(productIds);
+		
+		entities = Utils.replace(page.getContent(), entities);
+		
+		List<ProductDTO> dtos = entities.stream().map(p -> new ProductDTO(p, p.getCategories())).toList();
 		Page<ProductDTO> pageDto = new PageImpl<>(dtos, page.getPageable(), page.getTotalElements());
 		return pageDto;
 	}
