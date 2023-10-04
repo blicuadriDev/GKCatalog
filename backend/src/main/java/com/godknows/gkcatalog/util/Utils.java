@@ -5,20 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.godknows.gkcatalog.entities.Product;
-import com.godknows.gkcatalog.projections.ProductProjection;
+import com.godknows.gkcatalog.projections.idProjection;
 
 public class Utils {
 
-	public static List<Product> replace(List<ProductProjection> ordered, List<Product> unordered) {
+	public static <ID> List<? extends idProjection<ID>> replace(List<? extends idProjection<ID>> ordered, List<? extends idProjection<ID>> unordered) {
 
-		Map<Long, Product> map = new HashMap<>();
-		for(Product obj : unordered) {
+		Map<ID, idProjection<ID>> map = new HashMap<>();
+		for(idProjection<ID> obj : unordered) {
 			map.put(obj.getId(), obj);
 		}
 		
-		List<Product> result = new ArrayList<>();
-		for(ProductProjection obj : ordered) {
+		List<idProjection<ID>> result = new ArrayList<>();
+		for(idProjection<ID> obj : ordered) {
 			result.add(map.get(obj.getId()));
 		}
 
